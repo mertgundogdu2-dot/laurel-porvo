@@ -93,7 +93,7 @@ export function ImageCarouselHero({
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-32">
         {/* Carousel Container */}
         <div
-          className="relative w-full max-w-6xl h-24 sm:h-[500px] mb-4 sm:mb-16 overflow-hidden"
+          className="relative w-full max-w-6xl h-16 sm:h-[500px] mb-4 sm:mb-16 overflow-hidden"
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
@@ -101,7 +101,7 @@ export function ImageCarouselHero({
           <div className="absolute inset-0 flex items-center justify-center perspective">
             {images.map((image, index) => {
               const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
-              const radius = isMobile ? 35 : 180
+              const radius = isMobile ? 18 : 180
               const x = Math.cos(angle) * radius
               const y = Math.sin(angle) * radius
 
@@ -112,7 +112,7 @@ export function ImageCarouselHero({
               return (
                 <div
                   key={image.id}
-                  className="absolute w-8 h-10 sm:w-40 sm:h-48 transition-all duration-300"
+                  className="absolute w-5 h-6 sm:w-40 sm:h-48 transition-all duration-300"
                   style={{
                     transform: `
                       translate(${x}px, ${y}px)
