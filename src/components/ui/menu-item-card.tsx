@@ -64,7 +64,6 @@ const MenuItemCard = React.forwardRef<HTMLDivElement, MenuItemCardProps>(
         animate="animate"
         whileHover="hover"
         layout
-        {...props}
       >
         <div className="relative overflow-hidden">
           <img

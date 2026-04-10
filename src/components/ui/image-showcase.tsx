@@ -31,7 +31,7 @@ const cardVariants = {
 export const PhotoStackCard = React.forwardRef<
   HTMLDivElement,
   PhotoStackCardProps
->(({ className, images, category, title, subtitle, logo, isActive, ...props }, ref) => {
+>(({ className, images, category, title, subtitle, logo, isActive, onClick, style, ...props }, ref) => {
   return (
     <motion.div
       ref={ref}
@@ -42,7 +42,8 @@ export const PhotoStackCard = React.forwardRef<
       )}
       variants={cardVariants}
       animate={isActive ? "active" : "inactive"}
-      {...props}
+      onClick={onClick}
+      style={style}
     >
       {/* Fotoğraf - kartın tamamını kaplar */}
       <div className="absolute inset-0">
