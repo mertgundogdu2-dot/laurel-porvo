@@ -91,60 +91,51 @@ export function ImageCarouselHero({
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-32">
-        {/* Carousel Container */}
-        <div
-          className="relative w-full max-w-6xl h-16 sm:h-[500px] mb-4 sm:mb-16 overflow-hidden"
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        >
-          <div className="absolute inset-0 flex items-center justify-center perspective">
-            {images.map((image, index) => {
-              const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
-              const radius = isMobile ? 18 : 180
-              const x = Math.cos(angle) * radius
-              const y = Math.sin(angle) * radius
+        {/* Carousel Container - extra wrapper kills 3D overflow leak on Safari */}
+        <div className="w-full max-w-6xl overflow-hidden">
+          <div
+            className="relative w-full h-[120px] sm:h-[500px] mb-4 sm:mb-16"
+            style={{ clipPath: 'inset(0)' }}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
+            <div className="absolute inset-0 flex items-center justify-center" style={isMobile ? undefined : { perspective: '800px' }}>
+              {images.map((image, index) => {
+                const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
+                const r = isMobile ? 40 : 180
+                const x = Math.cos(angle) * r
+                const y = Math.sin(angle) * r
 
-              const perspectiveX = isMobile ? 0 : (mousePosition.x - 0.5) * 20
-              const perspectiveY = isMobile ? 0 : (mousePosition.y - 0.5) * 20
-              const rot = isMobile ? 0 : image.rotation
+                const pX = isMobile ? 0 : (mousePosition.x - 0.5) * 20
+                const pY = isMobile ? 0 : (mousePosition.y - 0.5) * 20
+                const rot = isMobile ? 0 : image.rotation
 
-              return (
-                <div
-                  key={image.id}
-                  className="absolute w-5 h-6 sm:w-40 sm:h-48 transition-all duration-300"
-                  style={{
-                    transform: `
-                      translate(${x}px, ${y}px)
-                      rotateX(${perspectiveY}deg)
-                      rotateY(${perspectiveX}deg)
-                      rotateZ(${rot}deg)
-                    `,
-                    transformStyle: "preserve-3d",
-                  }}
-                >
+                return (
                   <div
-                    className={cn(
-                      "relative w-full h-full rounded-lg sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl",
-                      "transition-all duration-300 hover:shadow-3xl hover:scale-110",
-                      "cursor-pointer group",
-                    )}
+                    key={image.id}
+                    className="absolute w-10 h-12 sm:w-40 sm:h-48"
                     style={{
-                      transformStyle: "preserve-3d",
+                      transform: `translate(${x}px, ${y}px) rotateX(${pY}deg) rotateY(${pX}deg) rotateZ(${rot}deg)`,
+                      ...(isMobile ? {} : { transformStyle: "preserve-3d" as const }),
                     }}
                   >
-                    <Image
-                      src={image.src || "/placeholder.svg"}
-                      alt={image.alt}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      priority={index < 3}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className={cn(
+                      "relative w-full h-full overflow-hidden",
+                      isMobile ? "rounded shadow" : "rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 cursor-pointer group",
+                    )}>
+                      <Image
+                        src={image.src || "/placeholder.svg"}
+                        alt={image.alt}
+                        fill
+                        className="object-cover"
+                        priority={index < 3}
+                      />
+                    </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
 
