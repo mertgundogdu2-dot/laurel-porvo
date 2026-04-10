@@ -92,18 +92,18 @@ export function ImageCarouselHero({
 
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-32">
         {/* Carousel Container - extra wrapper kills 3D overflow leak on Safari */}
-        <div className="w-full max-w-6xl overflow-hidden">
+        <div className="w-full max-w-6xl overflow-hidden" style={{ contain: 'paint layout' }}>
           <div
-            className="relative w-full h-[120px] sm:h-[500px] mb-4 sm:mb-16"
-            style={{ clipPath: 'inset(0)' }}
+            className="relative w-full h-[100px] sm:h-[500px] mb-4 sm:mb-16"
+            style={{ clipPath: 'inset(0)', contain: 'paint', overflow: 'hidden' }}
             onMouseMove={handleMouseMove}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
           >
-            <div className="absolute inset-0 flex items-center justify-center" style={isMobile ? undefined : { perspective: '800px' }}>
+            <div className="absolute inset-0 flex items-center justify-center" style={isMobile ? { overflow: 'hidden' } : { perspective: '800px' }}>
               {images.map((image, index) => {
                 const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
-                const r = isMobile ? 40 : 180
+                const r = isMobile ? 30 : 180
                 const x = Math.cos(angle) * r
                 const y = Math.sin(angle) * r
 
@@ -114,7 +114,7 @@ export function ImageCarouselHero({
                 return (
                   <div
                     key={image.id}
-                    className="absolute w-10 h-12 sm:w-40 sm:h-48"
+                    className="absolute w-8 h-10 sm:w-40 sm:h-48"
                     style={{
                       transform: `translate(${x}px, ${y}px) rotateX(${pY}deg) rotateY(${pX}deg) rotateZ(${rot}deg)`,
                       ...(isMobile ? {} : { transformStyle: "preserve-3d" as const }),
