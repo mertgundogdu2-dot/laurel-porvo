@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -49,9 +49,9 @@ export function ImageCarouselHero({
   ],
 }: ImageCarouselHeroProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isHovering, setIsHovering] = useState(false)
-  const [rotatingCards, setRotatingCards] = useState<number[]>([])
+  const [rotation, setRotation] = useState(0)
   const [isMobile, setIsMobile] = useState(true)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 640)
@@ -60,19 +60,13 @@ export function ImageCarouselHero({
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  // Continuous rotation animation
+  // Single rotation value drives the whole carousel
   useEffect(() => {
     const interval = setInterval(() => {
-      setRotatingCards((prev) => prev.map((_, i) => (prev[i] + 0.5) % 360))
+      setRotation((prev) => (prev + 0.5) % 360)
     }, 50)
-
     return () => clearInterval(interval)
   }, [])
-
-  // Initialize rotating cards
-  useEffect(() => {
-    setRotatingCards(images.map((_, i) => i * (360 / images.length)))
-  }, [images.length])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -81,6 +75,12 @@ export function ImageCarouselHero({
       y: (e.clientY - rect.top) / rect.height,
     })
   }
+
+  // Mobile: use a horizontal strip with cards sliding via CSS left/top (no translate)
+  // Desktop: full 3D carousel
+  const mobileRadius = 28
+  const desktopRadius = 180
+  const cardAngleStep = 360 / images.length
 
   return (
     <div className="relative w-full bg-gradient-to-b from-background via-background to-background overflow-hidden">
@@ -91,52 +91,64 @@ export function ImageCarouselHero({
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-32">
-        {/* Carousel Container - extra wrapper kills 3D overflow leak on Safari */}
-        <div className="w-full max-w-6xl overflow-hidden" style={{ contain: 'paint layout' }}>
-          <div
-            className="relative w-full h-[100px] sm:h-[500px] mb-4 sm:mb-16"
-            style={{ clipPath: 'inset(0)', contain: 'paint', overflow: 'hidden' }}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-          >
-            <div className="absolute inset-0 flex items-center justify-center" style={isMobile ? { overflow: 'hidden' } : { perspective: '800px' }}>
-              {images.map((image, index) => {
-                const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
-                const r = isMobile ? 30 : 180
-                const x = Math.cos(angle) * r
-                const y = Math.sin(angle) * r
+        {/* Carousel Container */}
+        <div
+          ref={containerRef}
+          className="relative w-[200px] h-[90px] sm:w-[500px] sm:h-[500px] mb-4 sm:mb-16 mx-auto"
+          style={{ overflow: 'hidden' }}
+          onMouseMove={handleMouseMove}
+        >
+          {images.map((image, index) => {
+            const angle = ((rotation + index * cardAngleStep) % 360) * (Math.PI / 180)
+            const r = isMobile ? mobileRadius : desktopRadius
 
-                const pX = isMobile ? 0 : (mousePosition.x - 0.5) * 20
-                const pY = isMobile ? 0 : (mousePosition.y - 0.5) * 20
-                const rot = isMobile ? 0 : image.rotation
+            // Calculate position from center of container
+            const centerX = isMobile ? 100 : 250 // half of container width
+            const centerY = isMobile ? 45 : 250  // half of container height
+            const cardW = isMobile ? 32 : 160     // card width in px
+            const cardH = isMobile ? 40 : 192     // card height in px
 
-                return (
-                  <div
-                    key={image.id}
-                    className="absolute w-8 h-10 sm:w-40 sm:h-48"
-                    style={{
-                      transform: `translate(${x}px, ${y}px) rotateX(${pY}deg) rotateY(${pX}deg) rotateZ(${rot}deg)`,
-                      ...(isMobile ? {} : { transformStyle: "preserve-3d" as const }),
-                    }}
-                  >
-                    <div className={cn(
-                      "relative w-full h-full overflow-hidden",
-                      isMobile ? "rounded shadow" : "rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 cursor-pointer group",
-                    )}>
-                      <Image
-                        src={image.src || "/placeholder.svg"}
-                        alt={image.alt}
-                        fill
-                        className="object-cover"
-                        priority={index < 3}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+            const posLeft = centerX + Math.cos(angle) * r - cardW / 2
+            const posTop = centerY + Math.sin(angle) * r - cardH / 2
+
+            // Scale based on vertical position (further back = smaller)
+            const scale = isMobile ? 1 : 0.7 + 0.3 * ((Math.sin(angle) + 1) / 2)
+            const zIndex = Math.round(50 + Math.sin(angle) * 25)
+            const opacity = isMobile ? 1 : 0.5 + 0.5 * ((Math.sin(angle) + 1) / 2)
+
+            const pX = isMobile ? 0 : (mousePosition.x - 0.5) * 20
+            const pY = isMobile ? 0 : (mousePosition.y - 0.5) * 20
+
+            return (
+              <div
+                key={image.id}
+                style={{
+                  position: 'absolute',
+                  left: `${posLeft}px`,
+                  top: `${posTop}px`,
+                  width: `${cardW}px`,
+                  height: `${cardH}px`,
+                  zIndex,
+                  opacity,
+                  transform: isMobile ? `scale(${scale})` : `scale(${scale}) rotateX(${pY}deg) rotateY(${pX}deg)`,
+                  transition: 'opacity 0.3s',
+                }}
+              >
+                <div className={cn(
+                  "relative w-full h-full overflow-hidden",
+                  isMobile ? "rounded shadow" : "rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 cursor-pointer group",
+                )}>
+                  <Image
+                    src={image.src || "/placeholder.svg"}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    priority={index < 3}
+                  />
+                </div>
+              </div>
+            )
+          })}
         </div>
 
         {/* Content Section */}
