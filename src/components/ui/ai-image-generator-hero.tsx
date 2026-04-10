@@ -50,17 +50,22 @@ export function ImageCarouselHero({
 }: ImageCarouselHeroProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [rotation, setRotation] = useState(0)
-  const [isMobile, setIsMobile] = useState(true)
+  const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // Measure actual container width - no guessing
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
+    const measure = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth)
+      }
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
   }, [])
 
-  // Single rotation value drives the whole carousel
+  // Single rotation drives everything
   useEffect(() => {
     const interval = setInterval(() => {
       setRotation((prev) => (prev + 0.5) % 360)
@@ -76,11 +81,14 @@ export function ImageCarouselHero({
     })
   }
 
-  // Mobile: use a horizontal strip with cards sliding via CSS left/top (no translate)
-  // Desktop: full 3D carousel
-  const mobileRadius = 28
-  const desktopRadius = 180
   const cardAngleStep = 360 / images.length
+
+  // All sizes derived from measured container width
+  const isSmall = containerWidth < 500
+  const cardW = isSmall ? Math.max(28, containerWidth * 0.08) : 160
+  const cardH = isSmall ? cardW * 1.25 : 192
+  const radius = isSmall ? Math.min(containerWidth * 0.12, 40) : 180
+  const containerHeight = isSmall ? Math.max(80, radius * 2 + cardH + 10) : 500
 
   return (
     <div className="relative w-full bg-gradient-to-b from-background via-background to-background overflow-hidden">
@@ -91,33 +99,28 @@ export function ImageCarouselHero({
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-32">
-        {/* Carousel Container */}
+        {/* Carousel Container - fixed size, overflow hidden */}
         <div
           ref={containerRef}
-          className="relative w-[200px] h-[90px] sm:w-[500px] sm:h-[500px] mb-4 sm:mb-16 mx-auto"
-          style={{ overflow: 'hidden' }}
+          className="relative w-full max-w-[500px] mb-4 sm:mb-16 mx-auto"
+          style={{ height: `${containerHeight}px`, overflow: 'hidden' }}
           onMouseMove={handleMouseMove}
         >
-          {images.map((image, index) => {
+          {containerWidth > 0 && images.map((image, index) => {
             const angle = ((rotation + index * cardAngleStep) % 360) * (Math.PI / 180)
-            const r = isMobile ? mobileRadius : desktopRadius
 
-            // Calculate position from center of container
-            const centerX = isMobile ? 100 : 250 // half of container width
-            const centerY = isMobile ? 45 : 250  // half of container height
-            const cardW = isMobile ? 32 : 160     // card width in px
-            const cardH = isMobile ? 40 : 192     // card height in px
+            const centerX = containerWidth / 2
+            const centerY = containerHeight / 2
 
-            const posLeft = centerX + Math.cos(angle) * r - cardW / 2
-            const posTop = centerY + Math.sin(angle) * r - cardH / 2
+            const posLeft = centerX + Math.cos(angle) * radius - cardW / 2
+            const posTop = centerY + Math.sin(angle) * radius - cardH / 2
 
-            // Scale based on vertical position (further back = smaller)
-            const scale = isMobile ? 1 : 0.7 + 0.3 * ((Math.sin(angle) + 1) / 2)
+            const scale = isSmall ? 1 : 0.7 + 0.3 * ((Math.sin(angle) + 1) / 2)
             const zIndex = Math.round(50 + Math.sin(angle) * 25)
-            const opacity = isMobile ? 1 : 0.5 + 0.5 * ((Math.sin(angle) + 1) / 2)
+            const opacity = isSmall ? 1 : 0.5 + 0.5 * ((Math.sin(angle) + 1) / 2)
 
-            const pX = isMobile ? 0 : (mousePosition.x - 0.5) * 20
-            const pY = isMobile ? 0 : (mousePosition.y - 0.5) * 20
+            const pX = isSmall ? 0 : (mousePosition.x - 0.5) * 20
+            const pY = isSmall ? 0 : (mousePosition.y - 0.5) * 20
 
             return (
               <div
@@ -130,13 +133,12 @@ export function ImageCarouselHero({
                   height: `${cardH}px`,
                   zIndex,
                   opacity,
-                  transform: isMobile ? `scale(${scale})` : `scale(${scale}) rotateX(${pY}deg) rotateY(${pX}deg)`,
-                  transition: 'opacity 0.3s',
+                  transform: isSmall ? undefined : `scale(${scale}) rotateX(${pY}deg) rotateY(${pX}deg)`,
                 }}
               >
                 <div className={cn(
                   "relative w-full h-full overflow-hidden",
-                  isMobile ? "rounded shadow" : "rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 cursor-pointer group",
+                  isSmall ? "rounded shadow" : "rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 cursor-pointer group",
                 )}>
                   <Image
                     src={image.src || "/placeholder.svg"}
