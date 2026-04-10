@@ -78,8 +78,8 @@ export function ImageCarouselHero({
     <div className="relative w-full bg-gradient-to-b from-background via-background to-background overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-primary/5 to-transparent rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-0 right-0 w-48 sm:w-96 h-48 sm:h-96 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-48 sm:w-96 h-48 sm:h-96 bg-gradient-to-tr from-primary/5 to-transparent rounded-full blur-3xl animate-pulse" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
