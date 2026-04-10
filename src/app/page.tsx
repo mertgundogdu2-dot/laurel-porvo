@@ -1,10 +1,10 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Features from "@/components/Features";
+import VideoAccordion from "@/components/VideoAccordion";
 import Gallery from "@/components/Gallery";
 import MenuSection from "@/components/MenuSection";
-import Reservation from "@/components/Reservation";
+import ImageCarousel from "@/components/ImageCarousel";
 import Contact from "@/components/Contact";
 import Chatbot from "@/components/Chatbot";
 
@@ -14,11 +14,11 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <ImageCarousel />
         <About />
-        <Features />
+        <VideoAccordion />
         <Gallery />
         <MenuSection />
-        <Reservation />
         <Contact />
       </main>
       <Chatbot />

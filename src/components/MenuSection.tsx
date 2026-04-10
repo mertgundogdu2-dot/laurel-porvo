@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { menuData } from "@/lib/menu-data";
+import { MenuItemCard } from "@/components/ui/menu-item-card";
 
 export default function MenuSection() {
   const [activeCategory, setActiveCategory] = useState(0);
 
   return (
-    <section id="menu" className="py-36 px-6 bg-[#fafaf8]">
-      <div className="max-w-5xl mx-auto">
+    <section id="menu" className="py-20 px-6 bg-[#fafaf8]">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
           <span className="font-[family-name:var(--font-inter)] text-[#b8875a] text-[10px] tracking-[0.5em] uppercase">
-            Şef Murat Bozok
+            Porvo Burger
           </span>
           <h2 className="font-[family-name:var(--font-cormorant)] text-5xl md:text-6xl font-light text-[#1c1c1c] mt-4">
             Menü
@@ -19,7 +20,7 @@ export default function MenuSection() {
         </div>
 
         {/* Category tabs */}
-        <div className="flex flex-wrap justify-center gap-1 mb-20">
+        <div className="flex flex-wrap justify-center gap-1 mb-16">
           {menuData.map((cat, i) => (
             <button
               key={cat.name}
@@ -45,32 +46,25 @@ export default function MenuSection() {
           </span>
         </div>
 
-        {/* Menu items */}
-        <div className="max-w-2xl mx-auto">
+        {/* Menu item cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {menuData[activeCategory].items.map((item) => (
-            <div
+            <MenuItemCard
               key={item.name}
-              className="group flex items-baseline justify-between py-6 border-b border-[#1c1c1c]/5 last:border-0"
-            >
-              <div className="flex-1 mr-8">
-                <h4 className="font-[family-name:var(--font-cormorant)] text-xl text-[#1c1c1c] group-hover:text-[#4a6741] transition-colors duration-300">
-                  {item.name}
-                </h4>
-                {item.description && (
-                  <p className="font-[family-name:var(--font-inter)] text-[#1c1c1c]/30 text-[12px] mt-1">
-                    {item.description}
-                  </p>
-                )}
-              </div>
-              <span className="font-[family-name:var(--font-cormorant)] text-[#b8875a] text-xl tabular-nums">
-                {item.price}
-              </span>
-            </div>
+              imageUrl={item.imageUrl || "/laurel-food.jpg"}
+              isVegetarian={item.isVegetarian ?? false}
+              name={item.name}
+              price={item.price}
+              originalPrice={item.price}
+              quantity={item.description || ""}
+              prepTimeInMinutes={15}
+              onAdd={() => {}}
+            />
           ))}
         </div>
 
         <p className="font-[family-name:var(--font-inter)] text-[#1c1c1c]/15 text-[10px] text-center mt-16 tracking-wider">
-          Fiyatlara KDV dahildir · %10 hizmet bedeli uygulanmaktadır
+          Fiyatlar bilgilendirme amaçlıdır · Güncel menü için şubelerimizle iletişime geçin
         </p>
       </div>
     </section>

@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { href: "#hakkimizda", label: "Hakkımızda" },
+  { href: "#hakkimizda", label: "Kurumsal" },
+  { href: "#markalar", label: "Markalar" },
   { href: "#menu", label: "Menü" },
-  { href: "#rezervasyon", label: "Rezervasyon" },
   { href: "#iletisim", label: "İletişim" },
 ];
 
@@ -29,13 +29,14 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-8 flex items-center justify-between">
-        <a
-          href="#anasayfa"
-          className={`font-[family-name:var(--font-cormorant)] text-[22px] font-light tracking-[0.25em] uppercase transition-colors duration-700 ${
-            scrolled ? "text-[#1c1c1c]" : "text-white"
-          }`}
-        >
-          Laurel
+        <a href="#anasayfa" className="transition-all duration-700">
+          <img
+            src="/porvo-beyaz.png"
+            alt="Porvo"
+            className={`h-7 transition-all duration-700 ${
+              scrolled ? "brightness-0" : ""
+            }`}
+          />
         </a>
 
         <div className="hidden md:flex items-center gap-10">
@@ -53,14 +54,14 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#rezervasyon"
+            href="#iletisim"
             className={`font-[family-name:var(--font-inter)] text-[11px] tracking-[0.2em] uppercase px-6 py-2.5 transition-all duration-500 ${
               scrolled
                 ? "bg-[#4a6741] text-white hover:bg-[#3d5936]"
                 : "border border-white/30 text-white hover:bg-white/10"
             }`}
           >
-            Rezervasyon
+            İletişim
           </a>
         </div>
 

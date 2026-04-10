@@ -13,7 +13,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Merhaba! Laurel İstanbul'a hoş geldiniz. Menü, rezervasyon veya mekanımız hakkında yardımcı olabilirim.",
+      content: "Merhaba! Porvo'ya hoş geldiniz. Burger, Trattoria veya Kahve Dükkanı hakkında yardımcı olabilirim.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -46,12 +46,12 @@ export default function Chatbot() {
       const data = await res.json();
       setMessages([
         ...newMessages,
-        { role: "assistant", content: data.message || "Bir hata oluştu. Lütfen +90 (552) 152 15 15 numarasını arayın." },
+        { role: "assistant", content: data.message || "Bir hata oluştu. Lütfen 0530 833 93 59 numarasını arayın." },
       ]);
     } catch {
       setMessages([
         ...newMessages,
-        { role: "assistant", content: "Bağlantı hatası. +90 (552) 152 15 15 numarasını arayabilirsiniz." },
+        { role: "assistant", content: "Bağlantı hatası. 0530 833 93 59 numarasını arayabilirsiniz." },
       ]);
     } finally {
       setLoading(false);
@@ -74,10 +74,10 @@ export default function Chatbot() {
              style={{ height: "500px" }}>
           <div className="bg-[#4a6741] px-6 py-5 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center">
-              <span className="font-[family-name:var(--font-cormorant)] text-white text-sm font-semibold">L</span>
+              <span className="font-[family-name:var(--font-cormorant)] text-white text-sm font-semibold">P</span>
             </div>
             <div>
-              <h4 className="font-[family-name:var(--font-cormorant)] text-white text-[15px]">Laurel Asistan</h4>
+              <h4 className="font-[family-name:var(--font-cormorant)] text-white text-[15px]">Porvo Asistan</h4>
               <span className="font-[family-name:var(--font-inter)] text-[10px] text-white/50">Çevrimiçi</span>
             </div>
           </div>

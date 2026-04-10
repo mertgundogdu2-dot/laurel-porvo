@@ -17,15 +17,18 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Laurel İstanbul | Doğanın Kalbinde Gastronomi",
+  title: "Porvo | Burger, Pizza, Makarna ve Kahve - Çorlu",
   description:
-    "Demirciköy, Sarıyer'de 1500m² yeşil alan içinde premium gastronomi deneyimi. Şef Murat Bozok'un özenle hazırladığı menü, Fransız kafe, çocuk parkı ve huzurlu atmosfer.",
+    "Porvo Çorlu - Burger, pizza, makarna ve kahve lezzetleri. Porvo Burger, Porvo Trattoria ve Porvo Kahve Dükkanı ile Çorlu'nun vazgeçilmez lezzet durağı.",
   keywords: [
-    "Laurel İstanbul",
-    "Demirciköy restoran",
-    "Sarıyer restaurant",
-    "İstanbul brunch",
-    "doğa içinde restoran",
+    "Porvo",
+    "Porvo Çorlu",
+    "Porvo Burger",
+    "Porvo Trattoria",
+    "Porvo Kahve Dükkanı",
+    "Çorlu burger",
+    "Çorlu pizza",
+    "Çorlu kahve",
   ],
 };
 
