@@ -85,10 +85,10 @@ export function ImageCarouselHero({
 
   // All sizes derived from measured container width
   const isSmall = containerWidth < 500
-  const cardW = isSmall ? Math.max(28, containerWidth * 0.08) : 160
+  const cardW = isSmall ? Math.max(56, containerWidth * 0.16) : 160
   const cardH = isSmall ? cardW * 1.25 : 192
-  const radius = isSmall ? Math.min(containerWidth * 0.12, 40) : 180
-  const containerHeight = isSmall ? Math.max(80, radius * 2 + cardH + 10) : 500
+  const radius = isSmall ? Math.min(containerWidth * 0.2, 70) : 180
+  const containerHeight = isSmall ? Math.max(160, radius * 2 + cardH + 20) : 500
 
   return (
     <div className="relative w-full bg-gradient-to-b from-background via-background to-background overflow-hidden">
