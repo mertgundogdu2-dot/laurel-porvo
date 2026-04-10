@@ -40,7 +40,7 @@ const AccordionItem = ({
       className={`
         relative overflow-hidden cursor-pointer
         transition-all duration-700 ease-in-out
-        ${isActive ? "w-[280px] h-[500px]" : "w-[60px] h-[500px]"}
+        ${isActive ? "w-[200px] sm:w-[280px] h-[350px] sm:h-[500px]" : "w-[40px] sm:w-[60px] h-[350px] sm:h-[500px]"}
       `}
       onMouseEnter={onMouseEnter}
     >
@@ -150,7 +150,7 @@ export function LandingAccordionItem() {
 
           {/* Sağ: Video Accordion */}
           <div className="w-full md:w-1/2">
-            <div className="flex flex-row items-center justify-center gap-3 overflow-x-auto p-4">
+            <div className="flex flex-row items-center justify-center gap-2 sm:gap-3 overflow-hidden p-4">
               {accordionItems.map((item, index) => (
                 <AccordionItem
                   key={item.id}

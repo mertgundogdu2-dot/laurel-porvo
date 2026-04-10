@@ -75,7 +75,7 @@ export function ImageCarouselHero({
   }
 
   return (
-    <div className="relative w-full bg-gradient-to-b from-background via-background to-background overflow-visible">
+    <div className="relative w-full bg-gradient-to-b from-background via-background to-background overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-3xl animate-pulse" />
@@ -85,7 +85,7 @@ export function ImageCarouselHero({
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
         {/* Carousel Container */}
         <div
-          className="relative w-full max-w-6xl h-96 sm:h-[500px] mb-12 sm:mb-16"
+          className="relative w-full max-w-6xl h-64 sm:h-[500px] mb-8 sm:mb-16"
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
@@ -94,7 +94,8 @@ export function ImageCarouselHero({
           <div className="absolute inset-0 flex items-center justify-center perspective">
             {images.map((image, index) => {
               const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
-              const radius = 180
+              const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
+              const radius = isMobile ? 90 : 180
               const x = Math.cos(angle) * radius
               const y = Math.sin(angle) * radius
 
@@ -105,7 +106,7 @@ export function ImageCarouselHero({
               return (
                 <div
                   key={image.id}
-                  className="absolute w-32 h-40 sm:w-40 sm:h-48 transition-all duration-300"
+                  className="absolute w-20 h-24 sm:w-40 sm:h-48 transition-all duration-300"
                   style={{
                     transform: `
                       translate(${x}px, ${y}px)

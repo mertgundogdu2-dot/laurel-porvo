@@ -36,7 +36,7 @@ export const PhotoStackCard = React.forwardRef<
     <motion.div
       ref={ref}
       className={cn(
-        "group relative flex h-96 w-96 cursor-pointer flex-col overflow-hidden",
+        "group relative flex h-72 w-72 sm:h-96 sm:w-96 cursor-pointer flex-col overflow-hidden",
         "transition-colors duration-300 ease-in-out",
         className
       )}
