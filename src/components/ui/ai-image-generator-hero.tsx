@@ -85,28 +85,25 @@ export function ImageCarouselHero({
       <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-32">
         {/* Carousel Container */}
         <div
-          className="relative w-full max-w-6xl h-48 sm:h-[500px] mb-6 sm:mb-16"
+          className="relative w-full max-w-6xl h-40 sm:h-[500px] mb-6 sm:mb-16 overflow-hidden"
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          {/* Rotating Image Cards */}
           <div className="absolute inset-0 flex items-center justify-center perspective">
             {images.map((image, index) => {
               const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
-              const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
-              const radius = isMobile ? 65 : 180
+              const radius = typeof window !== 'undefined' && window.innerWidth < 640 ? 55 : 180
               const x = Math.cos(angle) * radius
               const y = Math.sin(angle) * radius
 
-              // 3D perspective effect based on mouse position
               const perspectiveX = (mousePosition.x - 0.5) * 20
               const perspectiveY = (mousePosition.y - 0.5) * 20
 
               return (
                 <div
                   key={image.id}
-                  className="absolute w-14 h-18 sm:w-40 sm:h-48 transition-all duration-300"
+                  className="absolute w-12 h-14 sm:w-40 sm:h-48 transition-all duration-300"
                   style={{
                     transform: `
                       translate(${x}px, ${y}px)
@@ -119,7 +116,7 @@ export function ImageCarouselHero({
                 >
                   <div
                     className={cn(
-                      "relative w-full h-full rounded-2xl overflow-hidden shadow-2xl",
+                      "relative w-full h-full rounded-lg sm:rounded-2xl overflow-hidden shadow-lg sm:shadow-2xl",
                       "transition-all duration-300 hover:shadow-3xl hover:scale-110",
                       "cursor-pointer group",
                     )}
@@ -134,7 +131,6 @@ export function ImageCarouselHero({
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                       priority={index < 3}
                     />
-                    {/* Shine effect */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 </div>
