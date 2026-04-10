@@ -40,7 +40,7 @@ const AccordionItem = ({
       className={`
         relative overflow-hidden cursor-pointer
         transition-all duration-700 ease-in-out
-        ${isActive ? "w-[250px] h-[500px]" : "w-[60px] h-[500px]"}
+        ${isActive ? "w-[280px] h-[500px]" : "w-[60px] h-[500px]"}
       `}
       onMouseEnter={onMouseEnter}
     >
@@ -51,7 +51,7 @@ const AccordionItem = ({
         playsInline
         muted
         preload="metadata"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-contain"
       />
       <div className="absolute inset-0 bg-black/30" />
 
